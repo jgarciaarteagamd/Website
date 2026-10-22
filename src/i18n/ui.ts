@@ -143,7 +143,8 @@ export const ui = {
       'Soy médico especialista en Otorrinolaringología y paso consulta en Huelva desde 2023. Me formé como especialista en la Universidad de Buenos Aires, con rotaciones en el Hospital Pediátrico Sor María Ludovica (La Plata) y en el Hospital de la Santa Creu i Sant Pau (Barcelona), y tengo formación específica en otorrinolaringología pediátrica.',
       'En la consulta me tomo el tiempo de explicar qué ocurre, qué opciones hay y cómo cuidarte. Por eso escribo también fichas para pacientes, que puedes leer antes o después de la visita.',
     ],
-    portraitAlt: 'Retrato del Dr. Juan García Arteaga',
+    hospitalAlt: 'Fachada del Hospital Quirónsalud Huelva en la calle Punta Umbría, con la entrada principal',
+    linkedin: 'LinkedIn',
     credentials: [
       'Especialista en Otorrinolaringología (UBA), título reconocido por el Ministerio de Sanidad',
       'Colegiado en el Ilustre Colegio Oficial de Médicos de Huelva',
@@ -325,7 +326,8 @@ export const ui = {
       'I am an Ear, Nose and Throat (ENT) specialist and have been seeing patients in Huelva since 2023. I trained as a specialist at the University of Buenos Aires, with rotations at Sor María Ludovica Children’s Hospital (La Plata) and Hospital de la Santa Creu i Sant Pau (Barcelona), and I have specific training in paediatric ENT.',
       'In clinic I take the time to explain what is going on, what the options are and how to look after yourself. That is why I also write patient information pages you can read before or after your visit.',
     ],
-    portraitAlt: 'Portrait of Dr. Juan García Arteaga',
+    hospitalAlt: 'Front of Hospital Quirónsalud Huelva on Calle Punta Umbría, with the main entrance',
+    linkedin: 'LinkedIn',
     credentials: [
       'ENT specialist (University of Buenos Aires), qualification recognised by the Spanish Ministry of Health',
       'Registered with the Official College of Physicians of Huelva',

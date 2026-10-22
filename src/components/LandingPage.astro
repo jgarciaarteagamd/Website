@@ -7,7 +7,7 @@ import {
   address, otosur, hospital, sessions, infoUrl, bioUrl, type Lang,
 } from '../data/site';
 import holoHead from '../assets/holo-head.webp';
-import portrait from '../assets/portrait.webp';
+import hospitalPhoto from '../assets/hospital-quironsalud-huelva.jpg';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -42,7 +42,7 @@ const schema = {
       alternateName: 'Juan Pablo García Arteaga',
       description: t.description,
       url: home,
-      image: `${SITE_URL}/dr-juan-garcia-arteaga.jpg`,
+      image: `${SITE_URL}/og.jpg`,
       medicalSpecialty: 'https://schema.org/Otolaryngologic',
       telephone: otosur.phone.tel,
       address: postal,
@@ -73,6 +73,7 @@ const schema = {
       name: hospital.name,
       url: hospital.url,
       telephone: hospital.phone.tel,
+      image: new URL(hospitalPhoto.src, Astro.site).href,
       address: postal,
     },
     {
@@ -180,42 +181,54 @@ const schema = {
         </dl>
         <a class="line" href={`tel:${hospital.phone.tel}`}>{t.call} · {hospital.phone.shown}</a>
       </div>
-      <div class="card cut schedule">
-        <h3>{t.scheduleTitle}</h3>
-        <table>
-          <thead>
-            <tr><th scope="col"><span class="sr">{lang === 'es' ? 'Día' : 'Day'}</span></th><th scope="col">{t.morning}</th><th scope="col">{t.afternoon}</th></tr>
-          </thead>
-          <tbody>
-            {rows.map((r) => (
-              <tr>
-                <th scope="row">{r.day}</th>
-                <td>{r.morning ? <>{hours(r.morning)}{r.morning.alternate && <span class="alt">{t.alternate}</span>}</> : t.closed}</td>
-                <td>{r.afternoon ? hours(r.afternoon) : t.closed}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <p class="note">{t.scheduleNote}</p>
-      </div>
-      <div class="card cut where">
-        <h3>{t.whereTitle}</h3>
-        <p>{t.whereText}</p>
-        <address>{hospital.name}<br />{address.street}<br />{address.postalCode} {address.city}</address>
-        <a class="line" href={address.mapsUrl} rel="noopener">{t.openMap} <span aria-hidden="true">↗</span></a>
+      <div class="card cut visit">
+        <Image src={hospitalPhoto} alt={t.hospitalAlt} widths={[400, 738]} sizes="(max-width: 900px) 100vw, 700px" class="photo" />
+        <div class="visit-text">
+          <div class="where">
+            <h3>{t.whereTitle}</h3>
+            <p>{t.whereText}</p>
+            <address>{hospital.name}<br />{address.street}<br />{address.postalCode} {address.city}</address>
+            <a class="line" href={address.mapsUrl} rel="noopener">{t.openMap} <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="schedule">
+            <h3>{t.scheduleTitle}</h3>
+            <table>
+              <thead>
+                <tr><th scope="col"><span class="sr">{lang === 'es' ? 'Día' : 'Day'}</span></th><th scope="col">{t.morning}</th><th scope="col">{t.afternoon}</th></tr>
+              </thead>
+              <tbody>
+                {rows.map((r) => (
+                  <tr>
+                    <th scope="row">{r.day}</th>
+                    <td>{r.morning ? <>{hours(r.morning)}{r.morning.alternate && <span class="alt">{t.alternate}</span>}</> : t.closed}</td>
+                    <td>{r.afternoon ? hours(r.afternoon) : t.closed}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <p class="note">{t.scheduleNote}</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <section class="wrap block" id="sobre-mi" aria-labelledby="sobre-mi-title">
     <div class="about cut">
-      <Image src={portrait} alt={t.portraitAlt} width={240} height={240} widths={[160, 240, 400]} sizes="(max-width: 760px) 160px, 240px" class="portrait" />
       <div class="about-text">
         <p class="label">{t.aboutLabel}</p>
         <h2 id="sobre-mi-title">{t.aboutTitle}</h2>
         {t.aboutText.map((p) => <p>{p}</p>)}
+      </div>
+      <div class="about-side">
         <ul class="creds">{t.credentials.map((c) => <li>{c}</li>)}</ul>
-        <a class="line" href={bioUrl(lang)} rel="author">{t.aboutCta} <span aria-hidden="true">→</span></a>
+        <div class="about-links">
+          <a class="line" href={bioUrl(lang)} rel="author">{t.aboutCta} <span aria-hidden="true">→</span></a>
+          <a class="line linkedin" href={LINKEDIN_URL} rel="me noopener">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.6 5.9H1.2V14h2.4V5.9ZM2.4 2a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8ZM14.8 9.5c0-2.3-1.2-3.8-3.3-3.8-1.1 0-1.9.6-2.2 1.2V5.9H7V14h2.4V9.9c0-1.1.4-1.9 1.4-1.9s1.5.8 1.5 1.9V14h2.5V9.5Z" /></svg>
+            {t.linkedin}
+          </a>
+        </div>
       </div>
     </div>
   </section>
@@ -415,31 +428,36 @@ const schema = {
   .schedule th, .schedule td { text-align: left; padding: 8px 10px 8px 0; border-bottom: 1px solid var(--holo-line); vertical-align: top; }
   .schedule thead th { font-family: var(--label); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--holo-dim); }
   .schedule tbody th { font-weight: 500; color: var(--ink-strong); }
-  .schedule td { font-variant-numeric: tabular-nums; }
+  .schedule td { font-variant-numeric: tabular-nums; white-space: nowrap; }
   .alt { display: block; font-size: 0.8rem; color: var(--flare); }
   .note { margin: 0; font-size: 0.88rem; color: var(--ink-soft); }
+  /* full width: the hospital photo beside the address and the hours */
+  .visit {
+    grid-column: 1 / -1;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 0;
+    padding: 0;
+  }
+  .photo { display: block; width: 100%; height: 100%; min-height: 320px; object-fit: cover; object-position: 50% 50%; }
+  .visit-text { display: grid; gap: 28px; align-content: start; padding: 24px 28px 26px; }
+  .where, .schedule { display: grid; gap: 12px; justify-items: start; }
   .where p { margin: 0; }
   .where address { font-style: normal; line-height: 1.6; color: var(--ink-strong); }
 
   .about {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: 28px 40px;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 28px 48px;
     padding: 32px;
     border: 1px solid var(--holo-line);
     background: linear-gradient(120deg, color-mix(in srgb, var(--holo) 6%, transparent), color-mix(in srgb, var(--void-2) 40%, transparent));
   }
-  .portrait {
-    width: 240px;
-    height: 240px;
-    object-fit: cover;
-    border: 1px solid var(--holo-line);
-    padding: 4px;
-    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
-  }
-  .about-text { display: grid; gap: 12px; justify-items: start; align-content: start; }
+  .about-text { display: grid; gap: 12px; align-content: start; }
   .about-text p:not(.label) { margin: 0; max-width: 68ch; }
-  .creds { margin: 4px 0; padding-left: 1.2em; color: var(--ink-soft); display: grid; gap: 4px; }
+  .about-side { display: grid; gap: 20px; align-content: start; }
+  .creds { margin: 0; padding-left: 1.2em; color: var(--ink-soft); display: grid; gap: 8px; }
+  .about-links { display: flex; flex-wrap: wrap; gap: 10px; }
+  .linkedin svg { width: 15px; height: 15px; fill: currentColor; }
   .creds li::marker { color: var(--flare); }
 
   .patients {
@@ -514,13 +532,16 @@ const schema = {
     .holo { max-width: 240px; }
     .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 8px; }
     .booking, .patients { grid-template-columns: 1fr; }
+    .visit { grid-template-columns: 1fr; }
+    .photo { min-height: 0; aspect-ratio: 4 / 3; }
+    .visit-text { padding: 20px 20px 22px; }
   }
   @media (max-width: 760px) {
     .about { grid-template-columns: 1fr; padding: 24px; }
-    .portrait { width: 160px; height: 160px; }
     .tests li + li { padding-left: 0; border-left: 0; }
     .tests li { border-bottom: 1px solid var(--holo-line); padding-bottom: 16px; }
     .card, .patients { padding: 20px; }
+    .visit { padding: 0; }
     .block { padding-top: 64px; }
   }
 </style>
