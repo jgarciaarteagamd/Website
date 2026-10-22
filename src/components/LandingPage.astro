@@ -1,0 +1,526 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import { ui, paths, otherLang } from '../i18n/ui';
+import {
+  SITE_URL, INFO_URL, BIO_URL, LINKEDIN_URL, SCHEMA_DAYS,
+  address, otosur, hospital, sessions, infoUrl, bioUrl, type Lang,
+} from '../data/site';
+import holoHead from '../assets/holo-head.webp';
+import portrait from '../assets/portrait.webp';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui[lang];
+const home = new URL(paths.home(lang), Astro.site).href;
+
+// One row per weekday, with its morning and afternoon session if any.
+const rows = [1, 2, 3, 4, 5].map((day) => ({
+  day: t.days[day],
+  morning: sessions.find((s) => s.day === day && s.opens < '14:00'),
+  afternoon: sessions.find((s) => s.day === day && s.opens >= '14:00'),
+}));
+const hours = (s: { opens: string; closes: string }) => `${s.opens.replace(/^0/, '')}–${s.closes}`;
+
+// What search engines read: the doctor, the clinic and hospital where he sees
+// patients, and the questions below. Built from the same data as the page.
+const postal = {
+  '@type': 'PostalAddress',
+  streetAddress: address.street,
+  postalCode: address.postalCode,
+  addressLocality: address.city,
+  addressRegion: address.region,
+  addressCountry: address.country,
+};
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Physician',
+      '@id': `${SITE_URL}/#physician`,
+      name: t.doctor,
+      alternateName: 'Juan Pablo García Arteaga',
+      description: t.description,
+      url: home,
+      image: `${SITE_URL}/dr-juan-garcia-arteaga.jpg`,
+      medicalSpecialty: 'https://schema.org/Otolaryngologic',
+      telephone: otosur.phone.tel,
+      address: postal,
+      areaServed: [{ '@type': 'City', name: 'Huelva' }, { '@type': 'AdministrativeArea', name: 'Provincia de Huelva' }],
+      knowsLanguage: ['es', 'en'],
+      openingHoursSpecification: sessions
+        .filter((s) => !s.alternate)
+        .map((s) => ({ '@type': 'OpeningHoursSpecification', dayOfWeek: `https://schema.org/${SCHEMA_DAYS[s.day]}`, opens: s.opens, closes: s.closes })),
+      parentOrganization: { '@id': `${SITE_URL}/#otosur` },
+      hospitalAffiliation: { '@id': `${SITE_URL}/#hospital` },
+      availableService: t.services.map((s) => ({ '@type': 'MedicalTherapy', name: s.title })),
+      sameAs: [`${BIO_URL}/`, `${INFO_URL}/`, LINKEDIN_URL],
+    },
+    {
+      '@type': 'MedicalClinic',
+      '@id': `${SITE_URL}/#otosur`,
+      name: otosur.name,
+      url: otosur.url,
+      telephone: otosur.phone.tel,
+      email: otosur.email,
+      medicalSpecialty: 'https://schema.org/Otolaryngologic',
+      address: postal,
+      containedInPlace: { '@id': `${SITE_URL}/#hospital` },
+    },
+    {
+      '@type': 'Hospital',
+      '@id': `${SITE_URL}/#hospital`,
+      name: hospital.name,
+      url: hospital.url,
+      telephone: hospital.phone.tel,
+      address: postal,
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${SITE_URL}/#website`,
+      url: `${SITE_URL}/`,
+      name: t.brand,
+      inLanguage: ['es', 'en'],
+      about: { '@id': `${SITE_URL}/#physician` },
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': `${home}#faq`,
+      inLanguage: lang,
+      mainEntity: t.faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+    },
+  ],
+};
+---
+
+<Base lang={lang} title={t.title} description={t.description} ogTitle={t.ogTitle} alt={paths.home(otherLang(lang))} schema={schema}>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-text">
+        <p class="label tag">{t.heroLabel}</p>
+        <h1>{t.h1}</h1>
+        <p class="doc">{t.doctor}</p>
+        <p class="lead">{t.lead}</p>
+        <div class="ctas">
+          <a class="button" href={`tel:${otosur.phone.tel}`}>{t.callCta} · {otosur.phone.shown}</a>
+          <a class="line" href="#cita">{t.whereCta} <span aria-hidden="true">↓</span></a>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="glow"></div>
+        <Image src={holoHead} alt="" width={420} widths={[320, 420, 600]} sizes="(max-width: 900px) 280px, 420px" loading="eager" fetchpriority="high" class="holo" />
+      </div>
+    </div>
+    <dl class="wrap facts">
+      {t.facts.map(([k, v]) => (
+        <div><dt class="label">{k}</dt><dd>{v}</dd></div>
+      ))}
+    </dl>
+  </section>
+
+  <section class="wrap block" id="tratamientos" aria-labelledby="tratamientos-title">
+    <header class="sec-head">
+      <p class="label">{t.servicesLabel}</p>
+      <h2 id="tratamientos-title">{t.servicesTitle}</h2>
+      <p>{t.servicesText}</p>
+    </header>
+    <ul class="services">
+      {t.services.map((s) => (
+        <li class="cut">
+          <h3>{s.title}</h3>
+          <p>{s.text}</p>
+          <ul class="chips">{s.items.map((i) => <li class="chip">{i}</li>)}</ul>
+          <a class="more" href={infoUrl(lang, s.info)}>{t.readMore} <span aria-hidden="true">→</span></a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="wrap block" aria-labelledby="pruebas-title">
+    <header class="sec-head">
+      <p class="label">{t.testsLabel}</p>
+      <h2 id="pruebas-title">{t.testsTitle}</h2>
+      <p>{t.testsText}</p>
+    </header>
+    <ol class="tests">
+      {t.tests.map((p, i) => (
+        <li>
+          <span class="num">0{i + 1}</span>
+          <h3>{p.info ? <a href={infoUrl(lang, p.info)}>{p.title}</a> : p.title}</h3>
+          <p>{p.text}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="wrap block" id="cita" aria-labelledby="cita-title">
+    <header class="sec-head">
+      <p class="label">{t.bookingLabel}</p>
+      <h2 id="cita-title">{t.bookingTitle}</h2>
+      <p>{t.bookingText}</p>
+    </header>
+    <div class="booking">
+      <div class="card cut contact">
+        <p class="label">{t.otosurNote}</p>
+        <h3>{otosur.name}</h3>
+        <dl>
+          <div><dt>{t.phoneLabel}</dt><dd><a href={`tel:${otosur.phone.tel}`}>{otosur.phone.shown}</a></dd></div>
+          <div><dt>{t.mobileLabel}</dt><dd><a href={`tel:${otosur.mobile.tel}`}>{otosur.mobile.shown}</a></dd></div>
+          <div><dt>{t.emailLabel}</dt><dd><a href={`mailto:${otosur.email}`}>{otosur.email}</a></dd></div>
+          <div><dt>{t.webLabel}</dt><dd><a href={otosur.url} rel="noopener">{otosur.shownUrl}</a></dd></div>
+        </dl>
+        <a class="button" href={`tel:${otosur.phone.tel}`}>{t.call} · {otosur.phone.shown}</a>
+      </div>
+      <div class="card cut contact">
+        <p class="label">{t.hospitalNote}</p>
+        <h3>{hospital.name}</h3>
+        <dl>
+          <div><dt>{t.phoneLabel}</dt><dd><a href={`tel:${hospital.phone.tel}`}>{hospital.phone.shown}</a></dd></div>
+          <div><dt>{t.webLabel}</dt><dd><a href={hospital.url} rel="noopener">{hospital.shownUrl}</a></dd></div>
+        </dl>
+        <a class="line" href={`tel:${hospital.phone.tel}`}>{t.call} · {hospital.phone.shown}</a>
+      </div>
+      <div class="card cut schedule">
+        <h3>{t.scheduleTitle}</h3>
+        <table>
+          <thead>
+            <tr><th scope="col"><span class="sr">{lang === 'es' ? 'Día' : 'Day'}</span></th><th scope="col">{t.morning}</th><th scope="col">{t.afternoon}</th></tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr>
+                <th scope="row">{r.day}</th>
+                <td>{r.morning ? <>{hours(r.morning)}{r.morning.alternate && <span class="alt">{t.alternate}</span>}</> : t.closed}</td>
+                <td>{r.afternoon ? hours(r.afternoon) : t.closed}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p class="note">{t.scheduleNote}</p>
+      </div>
+      <div class="card cut where">
+        <h3>{t.whereTitle}</h3>
+        <p>{t.whereText}</p>
+        <address>{hospital.name}<br />{address.street}<br />{address.postalCode} {address.city}</address>
+        <a class="line" href={address.mapsUrl} rel="noopener">{t.openMap} <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap block" id="sobre-mi" aria-labelledby="sobre-mi-title">
+    <div class="about cut">
+      <Image src={portrait} alt={t.portraitAlt} width={240} height={240} widths={[160, 240, 400]} sizes="(max-width: 760px) 160px, 240px" class="portrait" />
+      <div class="about-text">
+        <p class="label">{t.aboutLabel}</p>
+        <h2 id="sobre-mi-title">{t.aboutTitle}</h2>
+        {t.aboutText.map((p) => <p>{p}</p>)}
+        <ul class="creds">{t.credentials.map((c) => <li>{c}</li>)}</ul>
+        <a class="line" href={bioUrl(lang)} rel="author">{t.aboutCta} <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap block" aria-labelledby="pacientes-title">
+    <div class="patients cut">
+      <div>
+        <p class="label">{t.patientsLabel}</p>
+        <h2 id="pacientes-title">{t.patientsTitle}</h2>
+        <p>{t.patientsText}</p>
+        <a class="button" href={infoUrl(lang)}>{t.patientsCta} <span aria-hidden="true">→</span></a>
+      </div>
+      <div>
+        <p class="label">{t.patientsPopular}</p>
+        <ul class="popular">
+          {t.popular.map(([name, path]) => <li><a href={infoUrl(lang, path)}>{name}</a></li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap block" id="preguntas" aria-labelledby="preguntas-title">
+    <header class="sec-head">
+      <p class="label">{t.faqLabel}</p>
+      <h2 id="preguntas-title">{t.faqTitle}</h2>
+    </header>
+    <div class="faqs">
+      {t.faqs.map((f, i) => (
+        <details open={i === 0}>
+          <summary><h3>{f.q}</h3></summary>
+          <p>{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <a class="callbar" href={`tel:${otosur.phone.tel}`} data-callbar>{t.mobileCall} · {otosur.phone.shown}</a>
+</Base>
+
+<script>
+  // The phone call bar shows once the hero's own call button has scrolled away.
+  const bar = document.querySelector<HTMLElement>('[data-callbar]');
+  const cta = document.querySelector('.ctas');
+  if (bar && cta) {
+    new IntersectionObserver(([e]) => bar.classList.toggle('show', !e.isIntersecting)).observe(cta);
+  }
+</script>
+
+<style>
+  .sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  /* Secondary action: an outlined twin of .button */
+  .line {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--display);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    color: var(--holo);
+    border: 1px solid var(--holo-line);
+    padding: 10px 17px;
+    text-decoration: none;
+  }
+  .line:hover { color: var(--flare); border-color: var(--flare); }
+
+  /* Hero */
+  .hero { border-bottom: 1px solid var(--holo-line); overflow-x: clip; }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: 24px 48px;
+    align-items: center;
+    padding-block: 72px 32px;
+  }
+  .hero-text { display: grid; gap: 18px; justify-items: start; max-width: 680px; }
+  .tag { border: 1px solid var(--holo-line); padding: 5px 10px; }
+  .hero h1 {
+    font-size: clamp(2.2rem, 5.6vw, 3.9rem);
+    color: var(--ink-strong);
+    text-shadow: 0 0 28px var(--glow);
+  }
+  .doc {
+    margin: 0;
+    font-family: var(--display);
+    font-size: var(--step-2);
+    font-weight: 500;
+    color: var(--holo);
+  }
+  .lead { margin: 0; font-size: 1.1rem; line-height: 1.7; max-width: 60ch; }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 6px; }
+  .hero-art { position: relative; display: grid; place-items: center; }
+  .glow {
+    position: absolute;
+    inset: 15% 15%;
+    border-radius: 50%;
+    background: var(--holo);
+    opacity: 0.16;
+    filter: blur(70px);
+  }
+  .holo {
+    position: relative;
+    width: 100%;
+    max-width: 380px;
+    mask-image: radial-gradient(closest-side at 50% 48%, #000 62%, transparent 100%);
+  }
+  /* on paper the light hologram turns into ink, as on the patient site */
+  :global([data-theme='light']) .holo { filter: invert(1) hue-rotate(180deg); mix-blend-mode: multiply; }
+  :global([data-theme='light']) .glow { opacity: 0.08; }
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    margin-block: 0;
+    padding-block: 0 40px;
+  }
+  .facts div { padding: 12px 16px; border-left: 1px solid var(--holo-line); display: grid; gap: 4px; }
+  .facts dd { margin: 0; font-family: var(--display); font-size: 1.05rem; color: var(--ink-strong); }
+
+  /* Sections */
+  .block { padding-top: 88px; scroll-margin-top: 72px; }
+  .sec-head { display: grid; gap: 10px; margin-bottom: 28px; max-width: 70ch; }
+  .sec-head p:not(.label) { margin: 0; color: var(--ink-soft); }
+
+  .services {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 14px;
+  }
+  .services > li {
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 10px;
+    padding: 20px 20px 22px;
+    border: 1px solid var(--holo-line);
+    background: color-mix(in srgb, var(--void-2) 60%, transparent);
+  }
+  .services h3 { font-size: 1.3rem; color: var(--holo); }
+  .services p { margin: 0; color: var(--ink-soft); font-size: 0.95rem; line-height: 1.55; }
+  .chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; align-content: start; }
+  .more {
+    font-family: var(--label);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  .tests {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 0;
+    border-top: 1px solid var(--holo-line);
+  }
+  .tests li { padding: 20px 20px 4px 0; display: grid; gap: 8px; align-content: start; }
+  .tests li + li { padding-left: 20px; border-left: 1px solid var(--holo-line); }
+  .num { font-family: var(--display); color: var(--flare); font-size: 1.4rem; }
+  .tests p { margin: 0; color: var(--ink-soft); font-size: 0.95rem; }
+
+  .booking {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .card {
+    display: grid;
+    gap: 12px;
+    align-content: start;
+    justify-items: start;
+    padding: 24px;
+    border: 1px solid var(--holo-line);
+    background: linear-gradient(120deg, color-mix(in srgb, var(--holo) 6%, transparent), color-mix(in srgb, var(--void-2) 40%, transparent));
+  }
+  .card h3 { font-size: 1.35rem; }
+  .contact dl { display: grid; gap: 6px; margin: 0; width: 100%; }
+  .contact dl div { display: grid; grid-template-columns: 7.5em minmax(0, 1fr); gap: 12px; }
+  .contact dt { color: var(--ink-soft); font-size: 0.9rem; }
+  .contact dd { margin: 0; overflow-wrap: anywhere; }
+  .contact dd a { font-family: var(--display); font-size: 1.08rem; text-decoration: none; }
+  .contact .button { margin-top: 6px; }
+  .schedule table { border-collapse: collapse; width: 100%; font-size: 0.98rem; }
+  .schedule th, .schedule td { text-align: left; padding: 8px 10px 8px 0; border-bottom: 1px solid var(--holo-line); vertical-align: top; }
+  .schedule thead th { font-family: var(--label); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--holo-dim); }
+  .schedule tbody th { font-weight: 500; color: var(--ink-strong); }
+  .schedule td { font-variant-numeric: tabular-nums; }
+  .alt { display: block; font-size: 0.8rem; color: var(--flare); }
+  .note { margin: 0; font-size: 0.88rem; color: var(--ink-soft); }
+  .where p { margin: 0; }
+  .where address { font-style: normal; line-height: 1.6; color: var(--ink-strong); }
+
+  .about {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 28px 40px;
+    padding: 32px;
+    border: 1px solid var(--holo-line);
+    background: linear-gradient(120deg, color-mix(in srgb, var(--holo) 6%, transparent), color-mix(in srgb, var(--void-2) 40%, transparent));
+  }
+  .portrait {
+    width: 240px;
+    height: 240px;
+    object-fit: cover;
+    border: 1px solid var(--holo-line);
+    padding: 4px;
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+  }
+  .about-text { display: grid; gap: 12px; justify-items: start; align-content: start; }
+  .about-text p:not(.label) { margin: 0; max-width: 68ch; }
+  .creds { margin: 4px 0; padding-left: 1.2em; color: var(--ink-soft); display: grid; gap: 4px; }
+  .creds li::marker { color: var(--flare); }
+
+  .patients {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: 28px 48px;
+    padding: 32px;
+    border: 1px solid var(--holo-line);
+  }
+  .patients > div:first-child { display: grid; gap: 12px; justify-items: start; align-content: start; }
+  .patients p:not(.label) { margin: 0; color: var(--ink-soft); max-width: 60ch; }
+  .popular { list-style: none; margin: 12px 0 0; padding: 0; display: grid; }
+  .popular a {
+    display: block;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--holo-line);
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .popular a::after { content: ' →'; color: var(--holo); }
+  .popular a:hover { color: var(--flare); }
+
+  .faqs { display: grid; max-width: 860px; border-top: 1px solid var(--holo-line); }
+  details { border-bottom: 1px solid var(--holo-line); }
+  summary {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 0;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: '+'; font-family: var(--display); color: var(--holo); font-size: 1.3rem; line-height: 1; }
+  details[open] summary::after { content: '−'; color: var(--flare); }
+  summary h3 { font-size: 1.1rem; font-weight: 500; }
+  summary:hover h3 { color: var(--flare); }
+  details p { margin: 0 0 18px; max-width: 70ch; color: var(--ink-soft); }
+
+  /* Phones: a call button always at hand */
+  .callbar { display: none; }
+  @media (max-width: 640px) {
+    .callbar {
+      display: block;
+      position: fixed;
+      left: var(--gutter);
+      right: var(--gutter-r);
+      bottom: max(12px, env(safe-area-inset-bottom, 0px));
+      z-index: 30;
+      padding: 13px 16px;
+      text-align: center;
+      font-family: var(--display);
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      color: var(--void);
+      background: var(--holo);
+      text-decoration: none;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+      transform: translateY(calc(100% + 24px));
+      transition: transform 0.25s ease-out;
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    }
+    .callbar.show { transform: none; }
+    .callbar:hover { background: var(--flare); color: var(--void); }
+    .contact dl div { grid-template-columns: 5.5em minmax(0, 1fr); }
+    .contact dd a { font-size: 1rem; }
+  }
+
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; padding-top: 48px; }
+    .holo { max-width: 240px; }
+    .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 8px; }
+    .booking, .patients { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 760px) {
+    .about { grid-template-columns: 1fr; padding: 24px; }
+    .portrait { width: 160px; height: 160px; }
+    .tests li + li { padding-left: 0; border-left: 0; }
+    .tests li { border-bottom: 1px solid var(--holo-line); padding-bottom: 16px; }
+    .card, .patients { padding: 20px; }
+    .block { padding-top: 64px; }
+  }
+</style>

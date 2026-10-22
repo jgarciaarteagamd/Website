@@ -1,0 +1,249 @@
+/* Same look as the patient site (atlas-ent, src/styles/global.css) and the Bio:
+   a dark "projection room" theme plus a light "printed plate" theme chosen with
+   the header switch (scripts/theme.js). Cyan is the hologram light, amber marks
+   what the visitor can act on. Keep the tokens in sync with atlas-ent. */
+:root,
+.theme-dark {
+  --void: #03070c;
+  --void-2: #071019;
+  --panel: rgba(7, 16, 25, 0.82);
+  --holo: #74f1ff;
+  --holo-dim: rgba(116, 241, 255, 0.6);
+  --holo-line: rgba(116, 241, 255, 0.16);
+  --flare: #ffc46b;
+  --ink: #e2f5f8;
+  --ink-soft: #94b6be;
+  --ink-strong: #fff;
+  /* soft light behind headings and live dots; none on paper */
+  --glow: rgba(116, 241, 255, 0.4);
+  color-scheme: dark;
+}
+:root[data-theme='light'] {
+  --void: #ffffff;
+  --void-2: #e8f3f5;
+  --panel: rgba(255, 255, 255, 0.9);
+  --holo: #0b7285;
+  --holo-dim: rgba(11, 114, 133, 0.85);
+  --holo-line: rgba(11, 114, 133, 0.2);
+  --flare: #a85a00;
+  --ink: #14272d;
+  --ink-soft: #4a6670;
+  --ink-strong: #000;
+  --glow: transparent;
+  color-scheme: light;
+}
+
+:root {
+  --display: 'Oxanium', 'Eurostile', 'Segoe UI', system-ui, sans-serif;
+  --body: 'Instrument Sans', 'Segoe UI', system-ui, sans-serif;
+  /* small uppercase labels: the body face, lightly tracked */
+  --label: 'Instrument Sans', 'Segoe UI', system-ui, sans-serif;
+
+  --step--1: 0.8125rem;
+  --step-0: 1rem;
+  --step-1: 1.1875rem;
+  --step-2: 1.5rem;
+  --step-3: clamp(1.5rem, 2.6vw, 2rem);
+  --step-4: clamp(1.9rem, 4.2vw, 2.8rem);
+
+  --gutter: max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
+  --measure: 68ch;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--void);
+  background-image: radial-gradient(120% 70% at 50% 0%, var(--void-2) 0%, var(--void) 70%);
+  background-attachment: fixed;
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+}
+
+/* Cursor: a folded-ribbon arrow (scripts/build-cursor.mjs), amber over links.
+   Text fields keep the text cursor. The halo is drawn by cursor.js. */
+:root {
+  --cursor: url('/cursor.svg') 5 5, auto;
+  --cursor-link: url('/cursor-link.svg') 5 5, pointer;
+}
+html { cursor: var(--cursor); }
+a[href],
+button:not(:disabled),
+[role='button'],
+summary,
+label[for],
+select,
+.cursor-pointer { cursor: var(--cursor-link); }
+input:not([type='button'], [type='submit'], [type='reset'], [type='checkbox'], [type='radio'], [type='range'], [type='color'], [type='file']),
+textarea,
+[contenteditable='true'] { cursor: text; }
+
+.cursor-halo,
+.cursor-ripple {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 36px;
+  height: 36px;
+  pointer-events: none;
+  z-index: 2147483647;
+}
+/* Centred on the arrow's body rather than its tip. */
+.cursor-halo { margin: -11px 0 0 -11px; opacity: 0; transition: opacity 0.25s; }
+.cursor-halo.on { opacity: 1; }
+.cursor-halo::before,
+.cursor-ripple::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+.cursor-halo::before {
+  border: 1px solid color-mix(in srgb, var(--holo) 40%, transparent);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--holo) 22%, transparent), inset 0 0 10px color-mix(in srgb, var(--holo) 10%, transparent);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s, box-shadow 0.3s;
+}
+.cursor-halo.link::before {
+  transform: scale(1.35);
+  border-color: color-mix(in srgb, var(--flare) 75%, transparent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--flare) 30%, transparent), inset 0 0 10px color-mix(in srgb, var(--flare) 12%, transparent);
+}
+.cursor-halo.press::before { transform: scale(0.8); }
+.cursor-ripple { margin: -18px 0 0 -18px; }
+.cursor-ripple::before {
+  border: 1.5px solid var(--holo);
+  animation: cursor-ripple 0.55s ease-out forwards;
+}
+.cursor-ripple.link::before { border-color: var(--flare); }
+@keyframes cursor-ripple {
+  from { transform: scale(0.3); opacity: 0.9; }
+  to { transform: scale(1.9); opacity: 0; }
+}
+@media print {
+  .cursor-halo,
+  .cursor-ripple { display: none; }
+}
+
+a { color: var(--holo); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+a:hover { color: var(--flare); }
+:focus-visible { outline: 1px solid var(--flare); outline-offset: 3px; }
+img { max-width: 100%; height: auto; }
+[hidden] { display: none !important; }
+
+h1, h2, h3 { font-family: var(--display); line-height: 1.15; text-wrap: balance; margin: 0; }
+h1 { font-size: var(--step-4); font-weight: 700; letter-spacing: 0.01em; }
+h2 { font-size: var(--step-3); font-weight: 500; letter-spacing: 0.01em; }
+h3 { font-size: var(--step-1); font-weight: 500; }
+
+.wrap {
+  width: 100%;
+  max-width: 1320px;
+  margin-inline: auto;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter-r);
+}
+
+.label {
+  font-family: var(--label);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--holo-dim);
+  margin: 0;
+}
+
+.skip {
+  position: absolute;
+  left: -999px;
+  top: 8px;
+  z-index: 50;
+  background: var(--flare);
+  color: var(--void);
+  padding: 6px 12px;
+}
+.skip:focus { left: 16px; }
+
+.cut {
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--display);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  color: var(--void);
+  background: var(--holo);
+  border: 0;
+  padding: 11px 18px;
+  text-decoration: none;
+  cursor: var(--cursor-link);
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+}
+.button:hover { background: var(--flare); color: var(--void); }
+
+.chip {
+  display: inline-block;
+  font-size: var(--step--1);
+  padding: 4px 9px;
+  border: 1px solid var(--holo-line);
+  border-radius: 2px;
+  color: var(--ink);
+}
+
+/* Long-form reading (fichas and legal pages) */
+.prose { max-width: var(--measure); font-size: 1rem; line-height: 1.7; }
+.prose h2 { font-size: 1.35rem; margin: 2.2em 0 0.6em; color: var(--holo); }
+.prose h3 { margin: 1.8em 0 0.5em; }
+.prose p, .prose ul, .prose ol { margin: 0 0 1em; }
+.prose li { margin-bottom: 0.35em; }
+.prose strong { color: var(--ink-strong); font-weight: 600; }
+.prose table { border-collapse: collapse; width: 100%; font-size: 0.95rem; margin: 0 0 1.4em; }
+.prose th { font-family: var(--label); font-size: 0.72rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--holo-dim); }
+.prose th, .prose td { border: 1px solid var(--holo-line); padding: 8px 10px; text-align: left; vertical-align: top; }
+.prose blockquote {
+  margin: 1.4em 0;
+  padding: 12px 16px;
+  border-left: 2px solid var(--flare);
+  background: color-mix(in srgb, var(--flare) 6%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* Printed handouts: compact A4 so a ficha fits on about two sheets. */
+@page { size: A4; margin: 11mm 13mm; }
+@media print {
+  :root { color-scheme: light; }
+  html { font-size: 8.5pt; background: #fff; }
+  body { background: #fff; color: #000; min-height: 0; line-height: 1.3; letter-spacing: -0.005em; }
+  header.site, footer.site, .no-print { display: none !important; }
+  .wrap { max-width: none; padding: 0; }
+  a { color: #000; text-decoration: none; }
+  .label, .label a { color: #444 !important; }
+  h1 { font-size: 1.65rem; }
+  .prose { max-width: none; line-height: 1.3; }
+  .prose h2 { font-size: 1.18rem; margin: 0.8em 0 0.25em; break-after: avoid; }
+  .prose h3 { font-size: 1.04rem; margin: 0.6em 0 0.2em; break-after: avoid; }
+  .prose p, .prose ul, .prose ol { margin: 0 0 0.4em; }
+  .prose ul, .prose ol { padding-left: 1.3em; }
+  .prose li { margin-bottom: 0.1em; }
+  .prose table { font-size: 0.95rem; margin: 0 0 0.5em; break-inside: avoid; }
+  .prose th, .prose td { padding: 2px 6px; border-color: #999; }
+  .prose h2, .prose h3, .prose strong, .prose th { color: #000; }
+  .prose blockquote { margin: 0.5em 0; padding: 3px 10px; background: none; border-left-color: #000; }
+}

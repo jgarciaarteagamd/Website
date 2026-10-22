@@ -1,0 +1,68 @@
+# Juan García Arteaga, ORL — landing page at jgarciaarteaga.pro
+# Spanish at /, English at /en/. Patient information lives at info.jgarciaarteaga.pro
+# and the CV at bio.jgarciaarteaga.pro.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# The patient site used to be served from this domain. Its pages moved to the
+# info subdomain: permanent redirects keep their links and search ranking.
+[[redirects]]
+  from = "/es/zonas/*"
+  to = "https://info.jgarciaarteaga.pro/es/zonas/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/en/areas/*"
+  to = "https://info.jgarciaarteaga.pro/en/areas/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/es/"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/es/aviso-legal/"
+  to = "/aviso-legal/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/es/privacidad/"
+  to = "/privacidad/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/es/cookies/"
+  to = "/cookies/"
+  status = 301
+  force = true
+
+# Old hologram fallback picture, in case it was shared or cached.
+[[redirects]]
+  from = "/holo/*"
+  to = "https://info.jgarciaarteaga.pro/holo/:splat"
+  status = 301
+  force = true
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+    X-Frame-Options = "DENY"
+
+# Hashed build assets (JS, CSS, fonts, images) never change under the same name.
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
