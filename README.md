@@ -20,6 +20,7 @@ Español en `/` (el idioma en que se busca en Huelva) e inglés en `/en/`.
 - `src/components/LandingPage.astro`: la página y los datos estructurados (schema.org `Physician`, `MedicalClinic`, `Hospital`, `FAQPage`).
 - `src/pages/*.md` y `src/pages/en/*.md`: aviso legal, privacidad y cookies.
 - `public/og.jpg`, `public/og-en.jpg`: imagen al compartir en redes. Se regeneran con `npm run og` (necesita Playwright con Chromium).
+- `src/assets/hospital-quironsalud-huelva.jpg`: foto de la fachada, retocada (fachada y calle uniformes, sin transeúntes, sin el coche aparcado del borde).
 
 El estilo, el logotipo, el cursor y el modo claro/oscuro son copia de atlas-ent (`src/styles/global.css`, `src/data/mark.js`, `src/scripts/`): si cambian allí, se copian aquí.
 
@@ -33,17 +34,22 @@ npm run build    # genera dist/
 
 ## Puesta en marcha: mover el dominio
 
-Hoy `jgarciaarteaga.pro` sirve la información para pacientes (atlas-ent). Para que esta página ocupe el dominio principal:
+Hoy en Netlify, el proyecto **atlas-ent** sirve `jgarciaarteaga.pro` y el proyecto **jgarciaarteaga** sirve `bio.jgarciaarteaga.pro`.
+Los cambios de código ya están hechos en la rama `ccr-627d6ce7-hz4b76` de cada repositorio (atlas-ent pasa a `info.`, la Bio enlaza los dos sitios); se fusionan en `main` en el paso indicado.
 
-1. **atlas-ent → info.jgarciaarteaga.pro**
-   - `astro.config.mjs`: `site: 'https://info.jgarciaarteaga.pro'`.
-   - `public/robots.txt`: la línea `Sitemap` con el nuevo dominio.
-   - `src/pages/index.astro`: el `canonical` con el nuevo dominio.
-   - Textos legales que nombran `jgarciaarteaga.pro` como ese sitio.
-   - En Netlify, cambiar el dominio del proyecto a `info.jgarciaarteaga.pro`.
-2. **Portfolio (bio)**: los enlaces a `https://jgarciaarteaga.pro/${language}/` (cabecera, pie e inicio) pasan a `https://info.jgarciaarteaga.pro/${language}/` para la información para pacientes, y se añade un enlace a esta página.
-3. **Este repositorio**: crear el proyecto en Netlify y asignarle `jgarciaarteaga.pro` y `www.jgarciaarteaga.pro`. `netlify.toml` ya redirige con 301 las direcciones antiguas (`/es/zonas/…`, `/en/areas/…`, `/es/`, avisos legales) al nuevo sitio, para no perder posicionamiento.
-4. **Google Search Console**: verificar el dominio, enviar `https://jgarciaarteaga.pro/sitemap-index.xml` y `https://info.jgarciaarteaga.pro/sitemap-index.xml`, y comprobar la página con la prueba de resultados enriquecidos.
+1. **Información para pacientes en `info.`** (proyecto atlas-ent)
+   - *Domain management → Add a domain*: `info.jgarciaarteaga.pro`. Si el dominio usa Netlify DNS, el registro se crea solo; si no, crear en el proveedor del dominio un `CNAME` de `info` a `atlas-ent.netlify.app`.
+   - Esperar a que el certificado HTTPS cubra `info.` y, en ese dominio, *Options → Set as primary domain*. Desde ese momento `jgarciaarteaga.pro` redirige a `info.`.
+   - Fusionar la rama de atlas-ent en `main`.
+2. **Proyecto nuevo para esta web**
+   - Fusionar esta rama en `main`.
+   - *Add new project → Import an existing project → GitHub → Website*. La configuración se lee de `netlify.toml`. Revisar la web en la dirección `….netlify.app` que asigna Netlify.
+3. **Cambio de dominio** (un par de minutos sin servicio en el dominio principal)
+   - En atlas-ent, *Domain management*: quitar `jgarciaarteaga.pro` y `www.jgarciaarteaga.pro` (*Options → Remove domain*).
+   - En el proyecto nuevo, *Add a domain*: `jgarciaarteaga.pro` (y `www`). Como todo sigue en Netlify, no hay que tocar las DNS de esos dos.
+   - Fusionar la rama de la Bio (Portfolio) en `main`.
+   - `netlify.toml` redirige con 301 las direcciones antiguas (`/es/zonas/…`, `/en/areas/…`, `/es/`, avisos legales) a su nuevo sitio, así no se pierde posicionamiento.
+4. **Google Search Console**: verificar el dominio (propiedad de tipo *Dominio*, cubre también `info.` y `bio.`), enviar `https://jgarciaarteaga.pro/sitemap-index.xml` y `https://info.jgarciaarteaga.pro/sitemap-index.xml`, y pasar la portada por la prueba de resultados enriquecidos.
 
 ## SEO local: lo que no está en el código
 
