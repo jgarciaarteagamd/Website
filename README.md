@@ -21,6 +21,7 @@ Español en `/` (el idioma en que se busca en Huelva) e inglés en `/en/`.
 - `src/pages/*.md` y `src/pages/en/*.md`: aviso legal, privacidad y cookies.
 - `public/og.jpg`, `public/og-en.jpg`: imagen al compartir en redes. Se regeneran con `npm run og` (necesita Playwright con Chromium).
 - `src/assets/hospital-quironsalud-huelva.jpg`: foto de la fachada, retocada (fachada y calle uniformes, sin transeúntes, sin el coche aparcado del borde).
+- `src/assets/hospital-quironsalud-huelva-holo.jpg`: la misma foto como holograma (contornos del edificio), que es la que muestra la página. Se regenera con `python3 scripts/make-holo-photo.py src/assets/hospital-quironsalud-huelva.jpg src/assets/hospital-quironsalud-huelva-holo.jpg` (necesita `opencv-python-headless`).
 
 El estilo, el logotipo, el cursor y el modo claro/oscuro son copia de atlas-ent (`src/styles/global.css`, `src/data/mark.js`, `src/scripts/`): si cambian allí, se copian aquí.
 

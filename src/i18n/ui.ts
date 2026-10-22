@@ -1,6 +1,6 @@
 // Every text on the landing page, in Spanish (at /) and English (at /en/).
 // Spanish is the main language: it is the one patients in Huelva search in.
-import { COLEGIADO, type Lang } from '../data/site';
+import type { Lang } from '../data/site';
 
 export interface Service {
   title: string;
@@ -47,7 +47,7 @@ export const ui = {
       ['Centro', 'Instituto Otosur'],
       ['Hospital', 'Quirónsalud Huelva'],
       ['Pacientes', 'Adultos y niños'],
-      ['Colegiado', `Nº ${COLEGIADO} · Huelva`],
+      ['Zona', 'Provincia de Huelva · Andalucía'],
     ] as [string, string][],
     holoAlt: 'Holograma de una cabeza con el oído, la nariz, la garganta y el cuello iluminados',
 
@@ -190,7 +190,7 @@ export const ui = {
       },
       {
         q: '¿Qué llevo a la primera consulta?',
-        a: 'Tu documento de identidad, la tarjeta del seguro si tienes, los informes y pruebas previas (audiometrías, escáner, analíticas) y la lista de medicamentos que tomas.',
+        a: 'La tarjeta del seguro si tienes, los informes y pruebas previas (audiometrías, escáner, analíticas) y la lista de medicamentos que tomas.',
       },
       {
         q: '¿Puedo consultar un caso por correo o por esta web?',
@@ -230,7 +230,7 @@ export const ui = {
       ['Clinic', 'Instituto Otosur'],
       ['Hospital', 'Quirónsalud Huelva'],
       ['Patients', 'Adults and children'],
-      ['Registration', `No. ${COLEGIADO} · Huelva`],
+      ['Area', 'Province of Huelva · Andalusia'],
     ] as [string, string][],
     holoAlt: 'Hologram of a head with the ear, nose, throat and neck lit up',
 

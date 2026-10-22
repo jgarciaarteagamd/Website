@@ -8,6 +8,7 @@ import {
 } from '../data/site';
 import holoHead from '../assets/holo-head.webp';
 import hospitalPhoto from '../assets/hospital-quironsalud-huelva.jpg';
+import hospitalHolo from '../assets/hospital-quironsalud-huelva-holo.jpg';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -182,7 +183,10 @@ const schema = {
         <a class="line" href={`tel:${hospital.phone.tel}`}>{t.call} · {hospital.phone.shown}</a>
       </div>
       <div class="card cut visit">
-        <Image src={hospitalPhoto} alt={t.hospitalAlt} widths={[400, 738]} sizes="(max-width: 900px) 100vw, 700px" class="photo" />
+        <figure class="projection">
+          <Image src={hospitalHolo} alt={t.hospitalAlt} widths={[480, 738, 1100]} sizes="(max-width: 900px) 100vw, 700px" class="photo" />
+          <figcaption class="label">{hospital.name}<span class="street"> · {address.street}</span></figcaption>
+        </figure>
         <div class="visit-text">
           <div class="where">
             <h3>{t.whereTitle}</h3>
@@ -354,7 +358,7 @@ const schema = {
     margin-block: 0;
     padding-block: 0 40px;
   }
-  .facts div { padding: 12px 16px; border-left: 1px solid var(--holo-line); display: grid; gap: 4px; }
+  .facts div { padding: 12px 16px; border-left: 1px solid var(--holo-line); display: grid; gap: 4px; align-content: start; }
   .facts dd { margin: 0; font-family: var(--display); font-size: 1.05rem; color: var(--ink-strong); }
 
   /* Sections */
@@ -438,7 +442,46 @@ const schema = {
     gap: 0;
     padding: 0;
   }
-  .photo { display: block; width: 100%; height: 100%; min-height: 320px; object-fit: cover; object-position: 50% 50%; }
+  /* The hospital drawn as a projection, like the hologram head: its outlines
+     (scripts/make-holo-photo.py) lit in cyan on dark, or as ink on paper. */
+  .projection {
+    position: relative;
+    margin: 0;
+    min-height: 320px;
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--holo);
+  }
+  .photo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 50%;
+    mix-blend-mode: multiply;
+  }
+  /* on paper: the outlines inverted to dark and screened over the ink colour */
+  :global([data-theme='light']) .projection { background: var(--holo); }
+  :global([data-theme='light']) .photo { filter: invert(1); mix-blend-mode: screen; }
+  .projection::before,
+  .projection::after { content: ''; position: absolute; inset: 0; pointer-events: none; }
+  /* scan lines and a soft glow */
+  .projection::before {
+    background:
+      repeating-linear-gradient(0deg, color-mix(in srgb, var(--void) 35%, transparent) 0 1px, transparent 1px 4px),
+      radial-gradient(60% 50% at 55% 45%, color-mix(in srgb, var(--holo) 10%, transparent), transparent 70%);
+  }
+  .projection::after { box-shadow: inset 0 0 60px color-mix(in srgb, var(--void) 85%, transparent); }
+  .projection figcaption {
+    position: absolute;
+    left: 16px;
+    bottom: 14px;
+    z-index: 1;
+    padding: 5px 10px;
+    color: var(--holo);
+    background: color-mix(in srgb, var(--void) 78%, transparent);
+    border: 1px solid var(--holo-line);
+  }
   .visit-text { display: grid; gap: 28px; align-content: start; padding: 24px 28px 26px; }
   .where, .schedule { display: grid; gap: 12px; justify-items: start; }
   .where p { margin: 0; }
@@ -529,11 +572,12 @@ const schema = {
 
   @media (max-width: 900px) {
     .hero-grid { grid-template-columns: 1fr; padding-top: 48px; }
-    .holo { max-width: 240px; }
+    .hero-art { display: none; }
     .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 8px; }
     .booking, .patients { grid-template-columns: 1fr; }
     .visit { grid-template-columns: 1fr; }
-    .photo { min-height: 0; aspect-ratio: 4 / 3; }
+    .projection { min-height: 0; height: min(72vw, 340px); }
+    .street { display: none; }
     .visit-text { padding: 20px 20px 22px; }
   }
   @media (max-width: 760px) {

@@ -8,7 +8,6 @@ export const INFO_URL = 'https://info.jgarciaarteaga.pro';
 export const BIO_URL = 'https://bio.jgarciaarteaga.pro';
 export const CONTACT_EMAIL = 'jgarciaarteaga.pro@gmail.com';
 export const LINKEDIN_URL = 'https://www.linkedin.com/in/jgarciaarteaga';
-export const COLEGIADO = '212105263';
 
 /** The patient site and the Bio open in English when linked from the English page. */
 export const infoUrl = (lang: Lang, path = '') => `${INFO_URL}/${lang}/${path}`;
