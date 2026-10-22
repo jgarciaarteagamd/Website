@@ -147,7 +147,6 @@ export const ui = {
     credentials: [
       'Especialista en Otorrinolaringología (UBA), título reconocido por el Ministerio de Sanidad',
       'Colegiado en el Ilustre Colegio Oficial de Médicos de Huelva',
-      'Consulta en español e inglés',
     ],
     aboutCta: 'Ver trayectoria completa',
 
@@ -218,19 +217,19 @@ export const ui = {
     nav: { services: 'Conditions', booking: 'Appointments', patients: 'Patients', about: 'Background' },
 
     title: 'ENT Specialist in Huelva, Spain · Dr. Juan García Arteaga',
-    description: 'English-speaking ENT doctor in Huelva: Dr. Juan García Arteaga at Instituto Otosur, Hospital Quirónsalud Huelva. Ears, dizziness, nose, throat, voice and children.',
+    description: 'ENT doctor in Huelva, Spain: Dr. Juan García Arteaga at Instituto Otosur, Hospital Quirónsalud Huelva. Ears, dizziness, nose, throat, voice and children.',
     ogTitle: 'Dr. Juan García Arteaga · ENT specialist in Huelva',
 
     heroLabel: 'Ear, Nose and Throat · Huelva, Spain',
     h1: 'ENT specialist in Huelva',
-    lead: 'I see adults and children with ear, hearing and balance problems, nose and sinus complaints, throat and voice problems, and lumps in the neck. My clinic is at Instituto Otosur, inside Hospital Quirónsalud Huelva. Consultations in Spanish and English.',
+    lead: 'I see adults and children with ear, hearing and balance problems, nose and sinus complaints, throat and voice problems, and lumps in the neck. My clinic is at Instituto Otosur, inside Hospital Quirónsalud Huelva.',
     callCta: 'Book an appointment',
     whereCta: 'Directions',
     facts: [
       ['Clinic', 'Instituto Otosur'],
       ['Hospital', 'Quirónsalud Huelva'],
       ['Patients', 'Adults and children'],
-      ['Languages', 'Spanish and English'],
+      ['Registration', `No. ${COLEGIADO} · Huelva`],
     ] as [string, string][],
     holoAlt: 'Hologram of a head with the ear, nose, throat and neck lit up',
 
@@ -301,7 +300,7 @@ export const ui = {
 
     bookingLabel: 'Hours and appointments',
     bookingTitle: 'Book an ENT appointment',
-    bookingText: 'Appointments are made through Instituto Otosur or Hospital Quirónsalud Huelva. When you call, ask for Dr. García Arteaga. The phone lines may answer in Spanish.',
+    bookingText: 'Appointments are made through Instituto Otosur or Hospital Quirónsalud Huelva. When you call, ask for Dr. García Arteaga. Consultations and the phone lines are in Spanish.',
     otosurNote: 'Ear, nose and throat service',
     hospitalNote: 'Hospital appointment line',
     phoneLabel: 'Phone',
@@ -330,7 +329,6 @@ export const ui = {
     credentials: [
       'ENT specialist (University of Buenos Aires), qualification recognised by the Spanish Ministry of Health',
       'Registered with the Official College of Physicians of Huelva',
-      'Consultations in Spanish and English',
     ],
     aboutCta: 'See full background',
 
@@ -368,8 +366,8 @@ export const ui = {
         a: 'Yes. I see children and adults, and I have specific training in paediatric ENT: repeated ear infections, adenoids, tonsils, snoring and questions about hearing and speech.',
       },
       {
-        q: 'Do you speak English?',
-        a: 'Yes, the consultation can be in English. The appointment lines may answer in Spanish.',
+        q: 'Is the consultation in English?',
+        a: 'Consultations are in Spanish for now. If you are not comfortable in Spanish, you are welcome to bring someone who can help translate.',
       },
       {
         q: 'Can I use my health insurance?',
