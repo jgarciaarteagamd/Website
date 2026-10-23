@@ -40,7 +40,7 @@ export const ui = {
 
     heroLabel: 'Otorrinolaringología · Huelva',
     h1: 'Otorrinolaringólogo en Huelva',
-    lead: 'Atiendo problemas de oído, audición y vértigo, nariz y senos, garganta, voz y cuello, en adultos y niños. Paso consulta en el Instituto Otosur, dentro del Hospital Quirónsalud Huelva.',
+    lead: 'Atiendo problemas de oído, audición y vértigo, nariz y senos paranasales, garganta, voz y cuello, en adultos y niños. Paso consulta en el Instituto Otosur, dentro del Hospital Quirónsalud Huelva.',
     callCta: 'Pedir cita',
     whereCta: 'Cómo llegar',
     facts: [
@@ -69,7 +69,7 @@ export const ui = {
         info: 'zonas/oido/vertigo-posicional-paroxistico-benigno/',
       },
       {
-        title: 'Nariz y senos',
+        title: 'Nariz y senos paranasales',
         text: 'Nariz tapada, mocos que no se van, alergia, sangrado y pérdida de olfato.',
         items: ['Obstrucción nasal', 'Sinusitis', 'Rinitis', 'Sangrado de nariz', 'Pólipos'],
         info: 'zonas/nariz/',
@@ -110,7 +110,7 @@ export const ui = {
     testsTitle: 'Pruebas de la consulta de otorrino',
     testsText: 'Según el caso, la valoración puede incluir alguna de estas pruebas. Ninguna requiere ingreso.',
     tests: [
-      { title: 'Otoscopia', text: 'Ver el conducto y el tímpano con luz y aumento.' },
+      { title: 'Otoscopia', text: 'Ver el conducto y el tímpano con luz y aumento.', info: 'zonas/oido/otoscopia-exploracion-oido/' },
       { title: 'Audiometría', text: 'Mide cuánto oyes en cada oído y en cada tono.', info: 'zonas/oido/audiometria-tonal/' },
       { title: 'Timpanometría', text: 'Comprueba cómo se mueve el tímpano y si hay líquido detrás.', info: 'zonas/oido/timpanometria-impedanciometria/' },
       { title: 'Fibroscopia', text: 'Una cámara fina por la nariz para ver nariz, garganta y cuerdas vocales.', info: 'zonas/garganta/fibroscopia-nasal-nasofibrolaringoscopia/' },
@@ -146,7 +146,7 @@ export const ui = {
     hospitalAlt: 'Fachada del Hospital Quirónsalud Huelva en la calle Punta Umbría, con la entrada principal',
     linkedin: 'LinkedIn',
     credentials: [
-      'Especialista en Otorrinolaringología (UBA), título reconocido por el Ministerio de Sanidad',
+      'Especialista en Otorrinolaringología, título reconocido por el Ministerio de Sanidad',
       'Colegiado en el Ilustre Colegio Oficial de Médicos de Huelva',
     ],
     aboutCta: 'Ver trayectoria completa',
@@ -293,7 +293,7 @@ export const ui = {
     testsTitle: 'Tests in the ENT clinic',
     testsText: 'Depending on the problem, your visit may include one of these tests. None of them needs a hospital stay.',
     tests: [
-      { title: 'Otoscopy', text: 'Looking at the ear canal and eardrum with light and magnification.' },
+      { title: 'Otoscopy', text: 'Looking at the ear canal and eardrum with light and magnification.', info: 'areas/ear/otoscopy-ear-examination/' },
       { title: 'Audiometry', text: 'Measures how well you hear in each ear and at each pitch.', info: 'areas/ear/pure-tone-audiometry-hearing-test/' },
       { title: 'Tympanometry', text: 'Checks how the eardrum moves and whether there is fluid behind it.', info: 'areas/ear/tympanometry-middle-ear-test/' },
       { title: 'Nasendoscopy', text: 'A thin camera through the nose to see the nose, throat and vocal cords.', info: 'areas/throat/flexible-nasendoscopy/' },
@@ -329,7 +329,7 @@ export const ui = {
     hospitalAlt: 'Front of Hospital Quirónsalud Huelva on Calle Punta Umbría, with the main entrance',
     linkedin: 'LinkedIn',
     credentials: [
-      'ENT specialist (University of Buenos Aires), qualification recognised by the Spanish Ministry of Health',
+      'ENT specialist, qualification recognised by the Spanish Ministry of Health',
       'Registered with the Official College of Physicians of Huelva',
     ],
     aboutCta: 'See full background',
