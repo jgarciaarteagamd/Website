@@ -146,7 +146,7 @@ export const ui = {
     hospitalAlt: 'Fachada del Hospital Quirónsalud Huelva en la calle Punta Umbría, con la entrada principal',
     linkedin: 'LinkedIn',
     credentials: [
-      'Especialista en Otorrinolaringología (UBA), título reconocido por el Ministerio de Sanidad',
+      'Especialista en Otorrinolaringología, título reconocido por el Ministerio de Sanidad',
       'Colegiado en el Ilustre Colegio Oficial de Médicos de Huelva',
     ],
     aboutCta: 'Ver trayectoria completa',
@@ -329,7 +329,7 @@ export const ui = {
     hospitalAlt: 'Front of Hospital Quirónsalud Huelva on Calle Punta Umbría, with the main entrance',
     linkedin: 'LinkedIn',
     credentials: [
-      'ENT specialist (University of Buenos Aires), qualification recognised by the Spanish Ministry of Health',
+      'ENT specialist, qualification recognised by the Spanish Ministry of Health',
       'Registered with the Official College of Physicians of Huelva',
     ],
     aboutCta: 'See full background',

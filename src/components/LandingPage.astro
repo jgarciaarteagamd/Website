@@ -219,9 +219,11 @@ const schema = {
 
   <section class="wrap block" id="sobre-mi" aria-labelledby="sobre-mi-title">
     <div class="about cut">
-      <div class="about-text">
+      <div class="about-head">
         <p class="label">{t.aboutLabel}</p>
         <h2 id="sobre-mi-title">{t.aboutTitle}</h2>
+      </div>
+      <div class="about-text">
         {t.aboutText.map((p) => <p>{p}</p>)}
       </div>
       <div class="about-side">
@@ -490,14 +492,16 @@ const schema = {
   .about {
     display: grid;
     grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-    gap: 28px 48px;
+    gap: 12px 48px;
     padding: 32px;
     border: 1px solid var(--holo-line);
     background: linear-gradient(120deg, color-mix(in srgb, var(--holo) 6%, transparent), color-mix(in srgb, var(--void-2) 40%, transparent));
   }
-  .about-text { display: grid; gap: 12px; align-content: start; }
-  .about-text p:not(.label) { margin: 0; max-width: 68ch; }
-  .about-side { display: grid; gap: 20px; align-content: start; }
+  /* The heading spans the first row, so the credentials start level with the first paragraph. */
+  .about-head { display: grid; gap: 12px; grid-column: 1; }
+  .about-text { display: grid; gap: 12px; align-content: start; grid-column: 1; grid-row: 2; }
+  .about-text p { margin: 0; max-width: 68ch; }
+  .about-side { display: grid; gap: 20px; align-content: start; grid-column: 2; grid-row: 2; }
   .creds { margin: 0; padding-left: 1.2em; color: var(--ink-soft); display: grid; gap: 8px; }
   .about-links { display: flex; flex-wrap: wrap; gap: 10px; }
   .linkedin svg { width: 15px; height: 15px; fill: currentColor; }
@@ -582,6 +586,8 @@ const schema = {
   }
   @media (max-width: 760px) {
     .about { grid-template-columns: 1fr; padding: 24px; }
+    .about-text, .about-side { grid-column: 1; grid-row: auto; }
+    .about-side { margin-top: 16px; }
     .tests li + li { padding-left: 0; border-left: 0; }
     .tests li { border-bottom: 1px solid var(--holo-line); padding-bottom: 16px; }
     .card, .patients { padding: 20px; }
