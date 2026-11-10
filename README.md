@@ -23,6 +23,8 @@ Español en `/` (el idioma en que se busca en Huelva) e inglés en `/en/`.
 - `src/assets/hospital-quironsalud-huelva.jpg`: foto de la fachada, retocada (fachada y calle uniformes, sin transeúntes, sin el coche aparcado del borde).
 - `src/assets/hospital-quironsalud-huelva-holo.jpg`: la misma foto como holograma (contornos del edificio), que es la que muestra la página. Se regenera con `python3 scripts/make-holo-photo.py src/assets/hospital-quironsalud-huelva.jpg src/assets/hospital-quironsalud-huelva-holo.jpg` (necesita `opencv-python-headless`).
 
+- Holograma de la cabecera: es el del sitio para pacientes en pequeño, sin interacción y con un vaivén lento. `src/scripts/holo.js` es copia de atlas-ent; `src/assets/holo-head.bin` es su `src/assets/head.bin` y `src/assets/holo-skeleton.bin` sale de `node scripts/bake-anatomy.mjs assets/atlas.glb <destino> bone` (en atlas-ent; licencia CC BY-SA, citada en el aviso legal). `src/assets/holo-head.webp` es la foto que se ve mientras carga, sin WebGL o con «reducir movimiento» (`scripts/make-holo-photo.mjs` en atlas-ent).
+
 El estilo, el logotipo, el cursor y el modo claro/oscuro son copia de atlas-ent (`src/styles/global.css`, `src/data/mark.js`, `src/scripts/`): si cambian allí, se copian aquí.
 
 ## Desarrollo
