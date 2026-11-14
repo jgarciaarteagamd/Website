@@ -141,6 +141,23 @@ const schema = {
     </ul>
   </section>
 
+  <section class="wrap block" id="prueba-audicion" aria-labelledby="prueba-title">
+    <div class="check cut">
+      <div class="check-main">
+        <p class="label">{t.checkLabel}</p>
+        <h2 id="prueba-title">{t.checkTitle}</h2>
+        <p>{t.checkText}</p>
+        <a class="button" href={HEARING_CHECK_URL} target="_blank" rel="noopener">{t.checkCta} <span aria-hidden="true">↗</span></a>
+      </div>
+      <ol class="check-steps">
+        {t.checkSteps.map((step, i) => (
+          <li><span class="num">0{i + 1}</span><span>{step}</span></li>
+        ))}
+      </ol>
+      <p class="check-note">{t.checkNote}</p>
+    </div>
+  </section>
+
   <section class="wrap block" aria-labelledby="pruebas-title">
     <header class="sec-head">
       <p class="label">{t.testsLabel}</p>
@@ -153,16 +170,12 @@ const schema = {
           <span class="num">0{i + 1}</span>
           <h3>{p.info ? <a href={infoUrl(lang, p.info)}>{p.title}</a> : p.title}</h3>
           <p>{p.text}</p>
+          {p.check && (
+            <a class="more" href={HEARING_CHECK_URL} target="_blank" rel="noopener">{t.checkShort} <span aria-hidden="true">↗</span></a>
+          )}
         </li>
       ))}
     </ol>
-    <div class="check">
-      <div>
-        <h3>{t.checkTitle}</h3>
-        <p>{t.checkText}</p>
-      </div>
-      <a class="button" href={HEARING_CHECK_URL} target="_blank" rel="noopener">{t.checkCta} <span aria-hidden="true">↗</span></a>
-    </div>
   </section>
 
   <section class="wrap block" id="cita" aria-labelledby="cita-title">
@@ -453,18 +466,26 @@ const schema = {
   .num { font-family: var(--display); color: var(--flare); font-size: 1.4rem; }
   .tests p { margin: 0; color: var(--ink-soft); font-size: 0.95rem; }
   .check {
-    margin-top: 28px;
-    padding: 24px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: 24px 48px;
+    padding: 32px;
     border: 1px solid var(--holo-line);
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px 32px;
   }
-  .check > div { display: grid; gap: 8px; max-width: 62ch; }
-  .check h3 { margin: 0; }
-  .check p { margin: 0; color: var(--ink-soft); }
+  .check-main { display: grid; gap: 12px; justify-items: start; align-content: start; }
+  .check-main h2, .check-main p:not(.label) { margin: 0; }
+  .check-main p:not(.label) { color: var(--ink-soft); max-width: 60ch; }
+  .check-steps { list-style: none; margin: 0; padding: 0; display: grid; align-content: start; }
+  .check-steps li {
+    display: grid;
+    grid-template-columns: 2.4rem 1fr;
+    align-items: baseline;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--holo-line);
+    color: var(--ink-soft);
+  }
+  .check-note { grid-column: 1 / -1; margin: 0; font-size: 0.85rem; color: var(--ink-soft); }
+  .tests .more { margin-top: 4px; }
 
   .booking {
     display: grid;
@@ -635,7 +656,7 @@ const schema = {
     .hero-grid { grid-template-columns: 1fr; padding-top: 48px; }
     .hero-art { display: none; }
     .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 8px; }
-    .booking, .patients { grid-template-columns: 1fr; }
+    .booking, .patients, .check { grid-template-columns: 1fr; }
     .visit { grid-template-columns: 1fr; }
     .projection { min-height: 0; height: min(72vw, 340px); }
     .street { display: none; }
@@ -647,7 +668,7 @@ const schema = {
     .about-side { margin-top: 16px; }
     .tests li + li { padding-left: 0; border-left: 0; }
     .tests li { border-bottom: 1px solid var(--holo-line); padding-bottom: 16px; }
-    .card, .patients { padding: 20px; }
+    .card, .patients, .check { padding: 20px; }
     .visit { padding: 0; }
     .block { padding-top: 64px; }
   }
