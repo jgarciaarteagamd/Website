@@ -4,7 +4,7 @@ import Base from '../layouts/Base.astro';
 import { ui, paths, otherLang } from '../i18n/ui';
 import {
   SITE_URL, INFO_URL, BIO_URL, LINKEDIN_URL, SCHEMA_DAYS,
-  address, otosur, hospital, sessions, infoUrl, bioUrl, type Lang,
+  address, otosur, hospital, sessions, infoUrl, bioUrl, HEARING_CHECK_URL, type Lang,
 } from '../data/site';
 import holoHead from '../assets/holo-head.webp';
 import hospitalPhoto from '../assets/hospital-quironsalud-huelva.jpg';
@@ -156,6 +156,13 @@ const schema = {
         </li>
       ))}
     </ol>
+    <div class="check">
+      <div>
+        <h3>{t.checkTitle}</h3>
+        <p>{t.checkText}</p>
+      </div>
+      <a class="button" href={HEARING_CHECK_URL} target="_blank" rel="noopener">{t.checkCta} <span aria-hidden="true">↗</span></a>
+    </div>
   </section>
 
   <section class="wrap block" id="cita" aria-labelledby="cita-title">
@@ -445,6 +452,19 @@ const schema = {
   .tests li + li { padding-left: 20px; border-left: 1px solid var(--holo-line); }
   .num { font-family: var(--display); color: var(--flare); font-size: 1.4rem; }
   .tests p { margin: 0; color: var(--ink-soft); font-size: 0.95rem; }
+  .check {
+    margin-top: 28px;
+    padding: 24px;
+    border: 1px solid var(--holo-line);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 32px;
+  }
+  .check > div { display: grid; gap: 8px; max-width: 62ch; }
+  .check h3 { margin: 0; }
+  .check p { margin: 0; color: var(--ink-soft); }
 
   .booking {
     display: grid;
