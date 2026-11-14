@@ -115,6 +115,9 @@ export const ui = {
       { title: 'Timpanometría', text: 'Comprueba cómo se mueve el tímpano y si hay líquido detrás.', info: 'zonas/oido/timpanometria-impedanciometria/' },
       { title: 'Fibroscopia', text: 'Una cámara fina por la nariz para ver nariz, garganta y cuerdas vocales.', info: 'zonas/garganta/fibroscopia-nasal-nasofibrolaringoscopia/' },
     ] as Test[],
+    checkTitle: '¿Oyes bien? Prueba de audición online',
+    checkText: 'Unos 5 minutos con auriculares, en un sitio tranquilo. Es orientativa: no sustituye a una audiometría, pero ayuda a saber si conviene hacerla.',
+    checkCta: 'Hacer la prueba',
 
     bookingLabel: 'Horario y cita',
     bookingTitle: 'Pedir cita con el otorrino',
@@ -298,6 +301,9 @@ export const ui = {
       { title: 'Tympanometry', text: 'Checks how the eardrum moves and whether there is fluid behind it.', info: 'areas/ear/tympanometry-middle-ear-test/' },
       { title: 'Nasendoscopy', text: 'A thin camera through the nose to see the nose, throat and vocal cords.', info: 'areas/throat/flexible-nasendoscopy/' },
     ] as Test[],
+    checkTitle: 'How well do you hear? Online hearing check',
+    checkText: 'About 5 minutes with headphones, somewhere quiet. It is only a guide: it does not replace an audiometry, but it helps you know whether you need one.',
+    checkCta: 'Take the check',
 
     bookingLabel: 'Hours and appointments',
     bookingTitle: 'Book an ENT appointment',

@@ -4,7 +4,7 @@ import Base from '../layouts/Base.astro';
 import { ui, paths, otherLang } from '../i18n/ui';
 import {
   SITE_URL, INFO_URL, BIO_URL, LINKEDIN_URL, SCHEMA_DAYS,
-  address, otosur, hospital, sessions, infoUrl, bioUrl, type Lang,
+  address, otosur, hospital, sessions, infoUrl, bioUrl, HEARING_CHECK_URL, type Lang,
 } from '../data/site';
 import holoHead from '../assets/holo-head.webp';
 import hospitalPhoto from '../assets/hospital-quironsalud-huelva.jpg';
@@ -110,7 +110,10 @@ const schema = {
       </div>
       <div class="hero-art" aria-hidden="true">
         <div class="glow"></div>
-        <Image src={holoHead} alt="" width={420} widths={[320, 420, 600]} sizes="(max-width: 900px) 280px, 420px" loading="eager" fetchpriority="high" class="holo" />
+        <div class="holo-box" data-holo>
+          <Image src={holoHead} alt="" width={420} widths={[320, 420, 600]} sizes="(max-width: 900px) 280px, 420px" loading="eager" fetchpriority="high" class="holo" />
+          <div class="live"></div>
+        </div>
       </div>
     </div>
     <dl class="wrap facts">
@@ -153,6 +156,13 @@ const schema = {
         </li>
       ))}
     </ol>
+    <div class="check">
+      <div>
+        <h3>{t.checkTitle}</h3>
+        <p>{t.checkText}</p>
+      </div>
+      <a class="button" href={HEARING_CHECK_URL} target="_blank" rel="noopener">{t.checkCta} <span aria-hidden="true">↗</span></a>
+    </div>
   </section>
 
   <section class="wrap block" id="cita" aria-labelledby="cita-title">
@@ -275,6 +285,33 @@ const schema = {
 </Base>
 
 <script>
+  // The picture of the hologram gives way to the hologram itself, swaying slowly, once the page
+  // is idle. The picture stays without WebGL or when the visitor asks for less motion.
+  import headUrl from '../assets/holo-head.bin?url';
+  import skeletonUrl from '../assets/holo-skeleton.bin?url';
+
+  const box = document.querySelector<HTMLElement>('[data-holo]');
+  if (box && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const isLight = () => document.documentElement.dataset.theme === 'light';
+    const start = () => import('../scripts/holo.js')
+      .then(({ createHologram }) => createHologram({
+        host: box.querySelector<HTMLElement>('.live')!,
+        headUrl,
+        anatomyUrl: skeletonUrl,
+        ink: isLight(),
+        interactive: false,
+        zoom: 1.18,
+        sway: { yaw: 0.5, yawSpeed: 0.14, pitch: 0.05, pitchSpeed: 0.19 },
+      }))
+      .then((holo) => {
+        box.classList.add('is-live');
+        new MutationObserver(() => holo.setInk(isLight())).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+      })
+      .catch(() => {});
+    if ('requestIdleCallback' in window) requestIdleCallback(start, { timeout: 2500 });
+    else setTimeout(start, 600);
+  }
+
   // The phone call bar shows once the hero's own call button has scrolled away.
   const bar = document.querySelector<HTMLElement>('[data-callbar]');
   const cta = document.querySelector('.ctas');
@@ -344,10 +381,17 @@ const schema = {
     opacity: 0.16;
     filter: blur(70px);
   }
+  .holo-box { position: relative; width: 100%; max-width: 380px; }
+  .live { position: absolute; inset: 0; opacity: 0; transition: opacity 0.8s; pointer-events: none; }
+  .live :global(canvas) { display: block; width: 100%; height: 100%; }
+  .holo-box.is-live .live { opacity: 1; }
+  .holo-box.is-live .holo { opacity: 0; }
   .holo {
+    display: block;
     position: relative;
     width: 100%;
-    max-width: 380px;
+    height: auto;
+    transition: opacity 0.8s;
     mask-image: radial-gradient(closest-side at 50% 48%, #000 62%, transparent 100%);
   }
   /* on paper the light hologram turns into ink, as on the patient site */
@@ -408,6 +452,19 @@ const schema = {
   .tests li + li { padding-left: 20px; border-left: 1px solid var(--holo-line); }
   .num { font-family: var(--display); color: var(--flare); font-size: 1.4rem; }
   .tests p { margin: 0; color: var(--ink-soft); font-size: 0.95rem; }
+  .check {
+    margin-top: 28px;
+    padding: 24px;
+    border: 1px solid var(--holo-line);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 32px;
+  }
+  .check > div { display: grid; gap: 8px; max-width: 62ch; }
+  .check h3 { margin: 0; }
+  .check p { margin: 0; color: var(--ink-soft); }
 
   .booking {
     display: grid;

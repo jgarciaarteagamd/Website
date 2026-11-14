@@ -8,6 +8,8 @@ export const INFO_URL = 'https://info.jgarciaarteaga.pro';
 export const BIO_URL = 'https://bio.jgarciaarteaga.pro';
 export const CONTACT_EMAIL = 'jgarciaarteaga.pro@gmail.com';
 export const LINKEDIN_URL = 'https://www.linkedin.com/in/jgarciaarteaga';
+/** Informative online hearing check (ENT Senses). Results reach the doctor's inbox anonymously. */
+export const HEARING_CHECK_URL = 'https://entsenses.app/p/a36bba52-6c25-4ae0-b252-26b602d29f86/hearing';
 
 /** The patient site and the Bio open in English when linked from the English page. */
 export const infoUrl = (lang: Lang, path = '') => `${INFO_URL}/${lang}/${path}`;
