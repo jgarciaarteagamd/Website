@@ -15,6 +15,8 @@ export interface Test {
   title: string;
   text: string;
   info?: string;
+  /** Shows a link to the online hearing check. */
+  check?: boolean;
 }
 
 export interface Faq {
@@ -106,18 +108,27 @@ export const ui = {
       },
     ] as Service[],
 
+    checkLabel: 'Prueba online gratuita',
+    checkTitle: '¿Oyes bien? Compruébalo en 5 minutos',
+    checkText: 'Una prueba de audición desde tu móvil u ordenador, con tus auriculares. Al terminar ves si tu audición parece normal o si conviene hacer una audiometría, y tu resultado me llega de forma anónima.',
+    checkCta: 'Hacer la prueba de audición',
+    checkSteps: [
+      'Responde unas preguntas sobre cómo oyes en tu día a día.',
+      'Ponte los auriculares y pulsa cada vez que oigas un pitido.',
+      'Mira tu resultado al momento. Si lo necesitas, pide cita.',
+    ],
+    checkNote: 'Es orientativa: no sustituye a una audiometría en consulta. No pide tu nombre ni tus datos de contacto.',
+    checkShort: 'Haz una prueba orientativa online',
+
     testsLabel: 'Exploración',
     testsTitle: 'Pruebas de la consulta de otorrino',
     testsText: 'Según el caso, la valoración puede incluir alguna de estas pruebas. Ninguna requiere ingreso.',
     tests: [
       { title: 'Otoscopia', text: 'Ver el conducto y el tímpano con luz y aumento.', info: 'zonas/oido/otoscopia-exploracion-oido/' },
-      { title: 'Audiometría', text: 'Mide cuánto oyes en cada oído y en cada tono.', info: 'zonas/oido/audiometria-tonal/' },
+      { title: 'Audiometría', text: 'Mide cuánto oyes en cada oído y en cada tono.', info: 'zonas/oido/audiometria-tonal/', check: true },
       { title: 'Timpanometría', text: 'Comprueba cómo se mueve el tímpano y si hay líquido detrás.', info: 'zonas/oido/timpanometria-impedanciometria/' },
       { title: 'Fibroscopia', text: 'Una cámara fina por la nariz para ver nariz, garganta y cuerdas vocales.', info: 'zonas/garganta/fibroscopia-nasal-nasofibrolaringoscopia/' },
     ] as Test[],
-    checkTitle: '¿Oyes bien? Prueba de audición online',
-    checkText: 'Unos 5 minutos con auriculares, en un sitio tranquilo. Es orientativa: no sustituye a una audiometría, pero ayuda a saber si conviene hacerla.',
-    checkCta: 'Hacer la prueba',
 
     bookingLabel: 'Horario y cita',
     bookingTitle: 'Pedir cita con el otorrino',
@@ -292,18 +303,27 @@ export const ui = {
       },
     ] as Service[],
 
+    checkLabel: 'Free online check',
+    checkTitle: 'How well do you hear? Find out in 5 minutes',
+    checkText: 'A hearing check on your phone or computer, with your own headphones. At the end you see whether your hearing seems normal or whether an audiometry would be advisable, and your result reaches me anonymously.',
+    checkCta: 'Take the hearing check',
+    checkSteps: [
+      'Answer a few questions about how you hear day to day.',
+      'Put on your headphones and press every time you hear a beep.',
+      'See your result straight away. If you need to, book a visit.',
+    ],
+    checkNote: 'It is only a guide: it does not replace an audiometry in the clinic. It does not ask for your name or contact details.',
+    checkShort: 'Try a quick online hearing check',
+
     testsLabel: 'Examination',
     testsTitle: 'Tests in the ENT clinic',
     testsText: 'Depending on the problem, your visit may include one of these tests. None of them needs a hospital stay.',
     tests: [
       { title: 'Otoscopy', text: 'Looking at the ear canal and eardrum with light and magnification.', info: 'areas/ear/otoscopy-ear-examination/' },
-      { title: 'Audiometry', text: 'Measures how well you hear in each ear and at each pitch.', info: 'areas/ear/pure-tone-audiometry-hearing-test/' },
+      { title: 'Audiometry', text: 'Measures how well you hear in each ear and at each pitch.', info: 'areas/ear/pure-tone-audiometry-hearing-test/', check: true },
       { title: 'Tympanometry', text: 'Checks how the eardrum moves and whether there is fluid behind it.', info: 'areas/ear/tympanometry-middle-ear-test/' },
       { title: 'Nasendoscopy', text: 'A thin camera through the nose to see the nose, throat and vocal cords.', info: 'areas/throat/flexible-nasendoscopy/' },
     ] as Test[],
-    checkTitle: 'How well do you hear? Online hearing check',
-    checkText: 'About 5 minutes with headphones, somewhere quiet. It is only a guide: it does not replace an audiometry, but it helps you know whether you need one.',
-    checkCta: 'Take the check',
 
     bookingLabel: 'Hours and appointments',
     bookingTitle: 'Book an ENT appointment',
